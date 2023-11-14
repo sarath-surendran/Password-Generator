@@ -47,10 +47,41 @@
         <button type="submit">Generate Password</button>
     </form>
     {% if password %}
-    <p>password is {{password}}</p>
-    {% else %}
-    <p>No password</p>
+    <p>password is <h3 id="yourtext">{{password}}</h3></p>
+    <button style="background:green; text-align:center;" onclick="CopyText()">Copy Text</button>
+    <div>
+        <form action="{% url 'save_password' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{password}}" name="save_password">
+            <button type="submit">Save</button>
+        </form>
+    </div>
     {% endif %}
+    <!-- <input style="text-align:center;" type="hidden" value="{{password}}"id="yourtext" > -->
 </div>
+
+
+<script>
+    function CopyText() {
+        var textElement = document.getElementById('yourtext');
+        
+        // Create a range and select the text
+        var range = document.createRange();
+        range.selectNodeContents(textElement);
+        
+        // Create a selection and add the range to it
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Copy the selected text
+        document.execCommand('copy');
+        
+        // Clear the selection
+        selection.removeAllRanges();
+
+        alert('Text copied to clipboard');
+  }
+  </script>
 
 {% endblock 'content' %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block 'content' %}
+
+<div class="container">
+  <h3>Create your Strong Password</h3>
+  <div>
+    <form method="POST" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="passwordLength">Select Password Length:</label>
+        <select id="passwordLength" name="length" required>
+            <option value="" disabled selected>Select Length</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+        </select>
+        <br>
+    
+        <label>
+            <input type="checkbox" name="lowercase"  checked>
+            Lowercase
+        </label>
+        <br>
+    
+        <label>
+            <input type="checkbox" name="uppercase" >
+            Uppercase
+        </label>
+        <br>
+    
+        <label>
+            <input type="checkbox" name="specialChars" >
+            Special Characters
+        </label>
+        <br>
+    
+        <label>
+            <input type="checkbox" name="numbers" >
+            Numbers
+        </label>
+        <br>
+    
+        <button type="submit">Generate Password</button>
+    </form>
+    {% if password %}
+    <p>password is {{password}}</p>
+    {% else %}
+    <p>No password</p>
+    {% endif %}
+</div>
+
+{% endblock 'content' %}

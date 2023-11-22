@@ -1,87 +1,103 @@
 {% extends 'base.html' %} {% block 'content' %}
 
-<div class="container">
-  <h3>Create your Strong Password</h3>
-  <div>
-    <form method="POST" action="{% url 'home' %}">
-        {% csrf_token %}
-        <label for="passwordLength">Select Password Length:</label>
-        <select id="passwordLength" name="length" required>
-            <option value="" disabled selected>Select Length</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-        </select>
-        <br>
-    
-        <label>
-            <input type="checkbox" name="lowercase"  checked>
-            Lowercase
-        </label>
-        <br>
-    
-        <label>
-            <input type="checkbox" name="uppercase" >
-            Uppercase
-        </label>
-        <br>
-    
-        <label>
-            <input type="checkbox" name="specialChars" >
-            Special Characters
-        </label>
-        <br>
-    
-        <label>
-            <input type="checkbox" name="numbers" >
-            Numbers
-        </label>
-        <br>
-    
-        <button type="submit">Generate Password</button>
-    </form>
-    {% if password %}
-    <p>password is <h3 id="yourtext">{{password}}</h3></p>
-    <button style="background:green; text-align:center;" onclick="CopyText()">Copy Text</button>
-    <div>
-        <form action="{% url 'save_password' %}" method="POST">
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <h1 class="mb-5">Random Password Generator</h1>
+    <div class="d-flex">
+        {% if password %}
+        <div style="background-color: #f5f5f5; width: 493px; height: 53px; border: 1px solid #d4d2e6; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);"
+            class="d-flex my-2 mx-3 justify-content-between align-items-center">
+            <p class="mr-3 mb-0">
+            <h3 id="yourtext" class="mx-3  mb-0">{{password}}</h3>
+            </p>
+            <button class="ml-3 btn btn-success" style="padding: 8px 12px;" onclick="CopyText()">
+                <i class="bi bi-clipboard-check"></i> Copy Text
+            </button>
+        </div>
+
+        <div class="mt-3">
+            <form action="{% url 'save_password' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{password}}" name="save_password">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="m-5">
+        <form method="POST" action="{% url 'home' %}" class="row g-3 align-items-center">
             {% csrf_token %}
-            <input type="hidden" value="{{password}}" name="save_password">
-            <button type="submit">Save</button>
+    
+            <div class="col-12">
+                <label for="passwordLength" class="form-label" style="font-size: 18px;">Select Password Length:</label>
+                <div class="d-flex align-items-center">
+                    <input type="range" id="passwordLength" name="length" min="8" max="20" value="8"
+                        oninput="updatePasswordLength(this.value)" class="form-range" required>
+                    <span id="lengthIndicator" class="ml-2 font-weight-bold" style="font-size: 18px;">8</span>
+                </div>
+            </div>
+    
+            <div class="col-12 mt-3">
+                <label for="password_settings" class="form-label font-weight-bold" style="font-size: 18px;">Characters used:</label>
+    
+                <!-- Add style="font-size: 16px;" to each form-check-label to adjust font size -->
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="lowercase" id="lowercaseCheckbox" checked>
+                    <label class="form-check-label" for="lowercaseCheckbox" style="font-size: 16px;">Lowercase</label>
+                </div>
+    
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="uppercase" id="uppercaseCheckbox">
+                    <label class="form-check-label" for="uppercaseCheckbox" style="font-size: 16px;">Uppercase</label>
+                </div>
+    
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="specialChars" id="specialCharsCheckbox">
+                    <label class="form-check-label" for="specialCharsCheckbox" style="font-size: 16px;">Special Characters</label>
+                </div>
+    
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="numbers" id="numbersCheckbox">
+                    <label class="form-check-label" for="numbersCheckbox" style="font-size: 16px;">Numbers</label>
+                </div>
+            </div>
+    
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary" style="font-size: 18px;">Generate Password</button>
+            </div>
         </form>
     </div>
-    {% endif %}
-    <!-- <input style="text-align:center;" type="hidden" value="{{password}}"id="yourtext" > -->
-</div>
+    
+    
+    
 
 
-<script>
-    function CopyText() {
-        var textElement = document.getElementById('yourtext');
-        
-        // Create a range and select the text
-        var range = document.createRange();
-        range.selectNodeContents(textElement);
-        
-        // Create a selection and add the range to it
-        var selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
+    <script>
 
-        // Copy the selected text
-        document.execCommand('copy');
-        
-        // Clear the selection
-        selection.removeAllRanges();
+        function updatePasswordLength(value) {
+            document.getElementById('lengthIndicator').textContent = value;
+        }
 
-        alert('Text copied to clipboard');
-  }
-  </script>
+        function CopyText() {
+            var textElement = document.getElementById('yourtext');
 
-{% endblock 'content' %}
+            // Create a range and select the text
+            var range = document.createRange();
+            range.selectNodeContents(textElement);
+
+            // Create a selection and add the range to it
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Copy the selected text
+            document.execCommand('copy');
+
+            // Clear the selection
+            selection.removeAllRanges();
+
+            alert('Text copied to clipboard');
+        }
+    </script>
+
+    {% endblock 'content' %}

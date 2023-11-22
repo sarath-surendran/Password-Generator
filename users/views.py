@@ -17,6 +17,9 @@ def home(request):
         lowercase = request.POST.get('lowercase')
         uppercase = request.POST.get('uppercase')
         numbers = request.POST.get('numbers')
+
+        if not any([lowercase, uppercase, specialChars, numbers]):
+            return redirect('home')
         
         password_characters = []
         if lowercase:
